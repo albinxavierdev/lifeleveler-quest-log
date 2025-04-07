@@ -40,6 +40,7 @@ export interface Reward {
   goldCost?: number;
   purchased: boolean;
   purchasedAt?: string;
+  createdAt: string; // Adding this missing property
 }
 
 export interface UserStats {
