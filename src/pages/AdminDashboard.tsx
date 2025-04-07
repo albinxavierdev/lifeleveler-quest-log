@@ -12,10 +12,12 @@ import { useToast } from '@/hooks/use-toast';
 import { Users, ArrowUpDown, Search, Ban, CheckCircle } from 'lucide-react';
 import { Profile } from '@/types/auth';
 
+type AdminUserProfile = Profile & { email?: string };
+
 const AdminDashboard = () => {
   const { user, isLoading, isAdmin } = useAuth();
   const { toast } = useToast();
-  const [users, setUsers] = useState<(Profile & { email?: string })[]>([]);
+  const [users, setUsers] = useState<AdminUserProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
@@ -48,16 +50,16 @@ const AdminDashboard = () => {
       
       if (usersError) {
         // If not authorized for admin functions, just use profiles
-        setUsers(profiles);
+        setUsers(profiles || []);
       } else {
         // Merge profile data with auth data
-        const mergedUsers = profiles.map(profile => {
-          const authUser = authUsers.users.find(u => u.id === profile.id);
+        const mergedUsers = profiles?.map(profile => {
+          const authUser = authUsers?.users?.find(u => u.id === profile.id);
           return {
             ...profile,
             email: authUser?.email
           };
-        });
+        }) || [];
         setUsers(mergedUsers);
       }
     } catch (error) {
