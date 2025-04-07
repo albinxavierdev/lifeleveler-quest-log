@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -38,10 +37,10 @@ const AdminDashboard = () => {
     try {
       setLoading(true);
       
-      // Fetch all profiles
+      // Fetch all profiles with proper type annotation
       const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
-        .select('*');
+        .select('*') as { data: Profile[] | null, error: Error | null };
         
       if (profilesError) throw profilesError;
       
@@ -53,7 +52,7 @@ const AdminDashboard = () => {
         setUsers(profiles || []);
       } else {
         // Merge profile data with auth data
-        const mergedUsers = (profiles || []).map(profile => {
+        const mergedUsers = (profiles || []).map((profile: Profile) => {
           const authUser = authUsers?.users?.find(u => u.id === profile.id);
           return {
             ...profile,
