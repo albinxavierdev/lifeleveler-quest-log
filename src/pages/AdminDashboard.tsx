@@ -53,13 +53,13 @@ const AdminDashboard = () => {
         setUsers(profiles || []);
       } else {
         // Merge profile data with auth data
-        const mergedUsers = profiles?.map(profile => {
+        const mergedUsers = (profiles || []).map(profile => {
           const authUser = authUsers?.users?.find(u => u.id === profile.id);
           return {
             ...profile,
             email: authUser?.email
           };
-        }) || [];
+        });
         setUsers(mergedUsers);
       }
     } catch (error) {
